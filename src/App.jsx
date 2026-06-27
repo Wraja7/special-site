@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   FaHeart,
@@ -15,6 +15,7 @@ import music from "./assets/music.mp3";
 
 function App() {
   const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     const tryPlayAudio = async () => {
@@ -25,6 +26,7 @@ function App() {
         audio.volume = 0.35;
         audio.currentTime = 0;
         await audio.play();
+        setIsPlaying(true);
 
         window.removeEventListener("pointerdown", tryPlayAudio);
         window.removeEventListener("keydown", tryPlayAudio);
@@ -41,6 +43,27 @@ function App() {
       window.removeEventListener("keydown", tryPlayAudio);
     };
   }, []);
+
+  const toggleAudio = async () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    try {
+      audio.volume = 0.35;
+      audio.muted = false;
+      audio.currentTime = 0;
+      await audio.play();
+      setIsPlaying(true);
+    } catch (error) {
+      console.warn("Audio playback failed:", error);
+    }
+  };
 
   const startExperience = async () => {
     const audio = audioRef.current;
@@ -69,6 +92,23 @@ function App() {
       </audio>
 
       <main className="website">
+        <header className="site-header">
+          <div className="site-brand">Special Site</div>
+          <nav className="site-nav" aria-label="Primary">
+            <a href="#intro">Intro</a>
+            <a href="#our-story">Story</a>
+            <a href="#gallery">Gallery</a>
+          </nav>
+          <button
+            type="button"
+            className="sound-toggle"
+            onClick={toggleAudio}
+            aria-label={isPlaying ? "Pause music" : "Play music"}
+          >
+            {isPlaying ? "🔊 Pause" : "🎵 Play"}
+          </button>
+        </header>
+
 {/* ================= HERO ================= */}
 
 <section className="hero">
@@ -76,7 +116,7 @@ function App() {
   <img
     src={hero}
     className="hero-image"
-    alt="Princess"
+    alt="Evening portrait with flowers and city lights"
   />
 
   <div className="overlay"></div>
@@ -283,6 +323,7 @@ function App() {
 
             </p>
 
+            <div className="intro-signature">With love, always.</div>
             <div className="scroll-indicator">
 
               <FaChevronDown />
@@ -295,7 +336,7 @@ function App() {
 
         {/* ================= OUR STORY ================= */}
 
-<section className="story">
+<section id="our-story" className="story">
 
     <motion.div
         className="story-heading"
@@ -449,7 +490,7 @@ function App() {
 
 {/* ================= PHOTO GALLERY ================= */}
 
-<section className="gallery">
+<section id="gallery" className="gallery">
 
     <motion.div
 
@@ -485,7 +526,7 @@ function App() {
 
             <img
                 src={img1}
-                alt=""
+                alt="The beginning memory"
             />
 
             <div className="gallery-overlay">
@@ -518,7 +559,7 @@ function App() {
 
             <img
                 src={img2}
-                alt=""
+                alt="Your smile memory"
             />
 
             <div className="gallery-overlay">
@@ -550,7 +591,7 @@ function App() {
 
             <img
                 src={img3}
-                alt=""
+                alt="My safe place memory"
             />
 
             <div className="gallery-overlay">
@@ -576,6 +617,20 @@ function App() {
     </div>
 
 </section>
+
+        {/* ================= FOOTER ================= */}
+
+        <footer className="site-footer">
+          <div className="footer-content">
+            <p>
+              Made with love for you, my favorite story.
+            </p>
+            <p className="footer-signature">
+              — addy
+            </p>
+            <div className="footer-heart">❤️✨</div>
+          </div>
+        </footer>
 
       </main>
     </>
