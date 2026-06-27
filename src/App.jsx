@@ -251,6 +251,10 @@ function App() {
 
               <br /><br />
 
+              I'm sorry for the times I failed to show you how much you mean to me.
+
+              <br /><br />
+
               Thank you for loving me. <span className="intro-emoji">🌹</span>
 
               <br />
